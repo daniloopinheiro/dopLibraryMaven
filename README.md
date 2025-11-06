@@ -1,249 +1,314 @@
-# dopBase
+# Biblioteca API - Sistema de Gerenciamento de Biblioteca
 
-[![CD - Deploy](https://github.com/daniloopinheiro/dopBase/actions/workflows/cd.yml/badge.svg)](https://github.com/daniloopinheiro/dopBase/actions/workflows/cd.yml)
-[![CI - Build & Test](https://github.com/daniloopinheiro/dopBase/actions/workflows/ci.yml/badge.svg)](https://github.com/daniloopinheiro/dopBase/actions/workflows/ci.yml)
-[![Dependencies Check & Update](https://github.com/daniloopinheiro/dopBase/actions/workflows/dependencies.yml/badge.svg)](https://github.com/daniloopinheiro/dopBase/actions/workflows/dependencies.yml)
-[![Monitoring & Performance](https://github.com/daniloopinheiro/dopBase/actions/workflows/monitoring.yml/badge.svg)](https://github.com/daniloopinheiro/dopBase/actions/workflows/monitoring.yml)
-[![PR Automation](https://github.com/daniloopinheiro/dopBase/actions/workflows/pr-automation.yml/badge.svg)](https://github.com/daniloopinheiro/dopBase/actions/workflows/pr-automation.yml)
+API REST desenvolvida com Spring Boot para gerenciamento de biblioteca, incluindo controle de autores, livros e empréstimos.
 
-**Repositório base/template** com CI/CD completo para qualquer tecnologia backend e frontend.  
-Inclui workflows de integração contínua, deploy, gerenciamento de dependências e monitoramento prontos para uso.
+## 🚀 Tecnologias
 
-## 📑 Índice
+- Java 17
+- Spring Boot 3.2.0
+- Spring Data JPA
+- PostgreSQL
+- Maven
+- Lombok
 
-1. [Visão Geral](#visão-geral)
-2. [CI/CD e Workflows](#cicd-e-workflows)
-3. [Instalação](#instalação)
-4. [Como Usar](#como-usar)
-5. [Configuração](#configuração)
-6. [Contribuições](#contribuições)
-7. [Artigos & Conteúdos](#artigos--conteúdos)
-8. [Licença](#licença)
-9. [Contato](#contato)
+## 📋 Pré-requisitos
+
+- JDK 17 ou superior
+- Maven 3.6+
+- PostgreSQL 12+
+
+## ⚙️ Configuração e Execução
+
+### 🚀 Início Rápido (Recomendado)
+
+A maneira mais fácil de começar é usar **H2 Database** (banco em memória):
+
+```powershell
+# Windows
+./run-dev.bat
+
+# Linux/Mac
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+✅ **Pronto!** A aplicação estará rodando em segundos sem precisar instalar nada!
+
+- **API REST**: http://localhost:8080/api/autores
+- **Console H2**: http://localhost:8080/api/h2-console
 
 ---
 
-## Visão Geral
+### 📋 Perfis Disponíveis
 
-O **dopBase** é um repositório base/template completo com pipelines de CI/CD prontos para uso, suportando múltiplas tecnologias e frameworks. Este projeto fornece uma base sólida para iniciar qualquer aplicação com as melhores práticas de DevOps.
+#### 1. DEV (H2 - Desenvolvimento) - **RECOMENDADO**
+```powershell
+./run-dev.bat
+```
+- ✅ Sem instalação
+- ✅ Funciona offline
+- ⚠️ Dados são perdidos ao reiniciar
 
-### 🎯 Como Usar Este Template
+#### 2. SUPABASE (PostgreSQL Cloud)
+```powershell
+./run-supabase.bat
+```
+**ANTES da primeira execução**, execute no Supabase SQL Editor:
+```sql
+CREATE TYPE status_emprestimo AS ENUM ('EMPRESTADO', 'DEVOLVIDO', 'ATRASADO');
+```
+- ✅ PostgreSQL real
+- ✅ Dados persistem
+- ⚠️ Requer internet
 
-Este repositório serve como base para novos projetos. Para usá-lo:
+#### 3. Docker (PostgreSQL Local) - **NOVO! 🐳**
+```powershell
+# 1. Iniciar PostgreSQL + pgAdmin com Docker
+docker-compose -f docker-compose-pgadmin.yml up -d
 
-1. **Clone ou use como template**:
-   ```bash
-   # Opção 1: Clone direto
-   git clone https://github.com/daniloopinheiro/dopBase.git meu-novo-projeto
+# 2. Executar a aplicação
+./mvnw.cmd spring-boot:run -D"spring-boot.run.profiles=dev"
+```
+- ✅ PostgreSQL real
+- ✅ Dados persistem
+- ✅ Fácil de configurar
+- ✅ Interface web (pgAdmin) em http://localhost:8082
+- ⚠️ Requer Docker instalado
+
+📖 **Ver guia completo:** `QUICK-START.md` ou `WEB-INTERFACES.md`
+
+#### 4. PostgreSQL Local (Instalação Manual)
+```powershell
+./mvnw.cmd spring-boot:run
+```
+Requer configuração do PostgreSQL local.
+
+📖 **Ver guia completo:** `README_PROFILES.md`
+
+---
+
+## 🏃 Comandos Úteis
+
+### Compilar
+```powershell
+./mvnw.cmd clean install
+```
+
+### Executar (H2)
+```powershell
+./run-dev.bat
+```
+
+### Executar (Supabase)
+```powershell
+./run-supabase.bat
+```
+
+### Gerar JAR
+```powershell
+./mvnw.cmd clean package
+java -jar target/biblioteca-api-1.0.0.jar
+```
+
+### Docker (PostgreSQL + pgAdmin)
+```powershell
+# Iniciar serviços (PostgreSQL + pgAdmin)
+docker-compose -f docker-compose-pgadmin.yml up -d
+
+# Acessar pgAdmin
+# URL: http://localhost:8082
+# Login: admin@admin.com / admin
+
+# Ver logs
+docker-compose -f docker-compose-pgadmin.yml logs -f
+
+# Parar serviços
+docker-compose -f docker-compose-pgadmin.yml down
+
+# Parar e remover dados
+docker-compose -f docker-compose-pgadmin.yml down -v
+```
+
+A aplicação estará disponível em: `http://localhost:8080/api`
+
+## 📚 Endpoints da API
+
+### Autores
+
+- `GET /api/autores` - Listar todos os autores
+- `GET /api/autores/{id}` - Buscar autor por ID
+- `GET /api/autores/search?name={nome}` - Buscar autores por nome
+- `GET /api/autores/nacionalidade/{nacionalidade}` - Buscar autores por nacionalidade
+- `POST /api/autores` - Criar novo autor
+- `POST /api/autores/batch` - 🆕 **Criar múltiplos autores (Batch)**
+- `PUT /api/autores/{id}` - Atualizar autor
+- `DELETE /api/autores/{id}` - Deletar autor
+
+### Livros
+
+- `GET /api/livros` - Listar todos os livros
+- `GET /api/livros/{id}` - Buscar livro por ID
+- `GET /api/livros/search?titulo={titulo}` - Buscar livros por título
+- `GET /api/livros/isbn/{isbn}` - Buscar livro por ISBN
+- `GET /api/livros/autor/{idAutor}` - Listar livros por autor
+- `GET /api/livros/genero/{genero}` - Listar livros por gênero
+- `GET /api/livros/disponiveis` - Listar livros disponíveis
+- `POST /api/livros` - Criar novo livro
+- `PUT /api/livros/{id}` - Atualizar livro
+- `PATCH /api/livros/{id}/disponibilidade?disponivel={true|false}` - Atualizar disponibilidade
+- `DELETE /api/livros/{id}` - Deletar livro
+
+### Empréstimos
+
+- `GET /api/emprestimos` - Listar todos os empréstimos
+- `GET /api/emprestimos/{id}` - Buscar empréstimo por ID
+- `GET /api/emprestimos/status/{status}` - Listar empréstimos por status
+- `GET /api/emprestimos/livro/{idLivro}` - Listar empréstimos por livro
+- `GET /api/emprestimos/cpf/{cpf}` - Listar empréstimos por CPF do usuário
+- `GET /api/emprestimos/search?nome={nome}` - Buscar empréstimos por nome do usuário
+- `GET /api/emprestimos/atrasados` - Listar empréstimos atrasados
+- `GET /api/emprestimos/periodo?dataInicio={data}&dataFim={data}` - Listar empréstimos por período
+- `POST /api/emprestimos` - Criar novo empréstimo
+- `PATCH /api/emprestimos/{id}/devolver` - Devolver livro
+- `PUT /api/emprestimos/{id}` - Atualizar empréstimo
+- `DELETE /api/emprestimos/{id}` - Deletar empréstimo
+- `POST /api/emprestimos/atualizar-atrasados` - Atualizar status dos empréstimos atrasados
+
+## 📝 Exemplos de Requisições
+
+### Criar Autor
+
+```json
+POST /api/autores
+{
+  "nome": "Machado",
+  "sobrenome": "de Assis",
+  "nacionalidade": "Brasileiro",
+  "dataNascimento": "1839-06-21",
+  "biografia": "Joaquim Maria Machado de Assis foi um escritor brasileiro..."
+}
+```
+
+### 🆕 Criar Múltiplos Autores (Batch)
+
+```json
+POST /api/autores/batch
+[
+  {
+    "nome": "Clarice",
+    "sobrenome": "Lispector",
+    "nacionalidade": "Brasileira",
+    "dataNascimento": "1920-12-10",
+    "biografia": "Clarice Lispector foi uma escritora e jornalista..."
+  },
+  {
+    "nome": "Jorge",
+    "sobrenome": "Amado",
+    "nacionalidade": "Brasileiro",
+    "dataNascimento": "1912-08-10",
+    "biografia": "Jorge Leal Amado de Faria foi um dos mais famosos..."
+  }
+]
+```
+
+**Resposta:**
+```json
+{
+  "autores": [...],
+  "totalProcessado": 2,
+  "criados": 2,
+  "existentes": 0,
+  "mensagem": "Total processado: 2 | Criados: 2 | Já existentes: 0"
+}
+```
+
+**✨ Ignora duplicatas automaticamente!** Se um autor já existir, ele será retornado sem erro.
+
+**💡 Testar:** `.\test-batch-create.ps1`
+
+### Criar Livro
+
+```json
+POST /api/livros
+{
+  "titulo": "Dom Casmurro",
+  "idAutor": 1,
+  "isbn": "978-8535911664",
+  "editora": "Penguin Companhia",
+  "anoPublicacao": 1899,
+  "genero": "Romance",
+  "numeroPaginas": 256,
+  "quantidadeEstoque": 5,
+  "disponivel": true
+}
+```
+
+### Criar Empréstimo
+
+```json
+POST /api/emprestimos
+{
+  "idLivro": 1,
+  "nomeUsuario": "João Silva",
+  "cpfUsuario": "123.456.789-00",
+  "telefone": "(11) 98765-4321",
+  "email": "joao.silva@email.com",
+  "dataEmprestimo": "2025-11-03",
+  "dataPrevistaDevolucao": "2025-11-17",
+  "observacoes": "Cliente regular"
+}
+```
+
+## 🔒 Funcionalidades de Segurança
+
+- Validação de entrada em todos os endpoints
+- Tratamento global de exceções
+- Prevenção de SQL Injection através de JPA/Hibernate
+- Validação de regras de negócio (ex: livro disponível antes de emprestar)
+
+## 📦 Estrutura do Projeto
+
+```
+backend/
+├── src/
+│   ├── main/
+│   │   ├── java/com/biblioteca/
+│   │   │   ├── controller/      # Controladores REST
+│   │   │   ├── dto/              # Data Transfer Objects
+│   │   │   ├── exception/        # Tratamento de exceções
+│   │   │   ├── model/            # Entidades JPA
+│   │   │   │   └── enums/        # Enumerações
+│   │   │   ├── repository/       # Repositórios JPA
+│   │   │   ├── service/          # Lógica de negócio
+│   │   │   └── BibliotecaApplication.java
+│   │   └── resources/
+│   │       └── application.properties
+│   └── test/
+├── pom.xml
+└── README.md
+```
+
+## 🎯 Regras de Negócio
+
+1. **Livros**: 
+   - ISBN deve ser único
+   - Livro só fica indisponível quando estoque chega a zero
    
-   # Opção 2: Use o botão "Use this template" no GitHub
-   ```
+2. **Empréstimos**:
+   - Livro deve estar disponível e com estoque > 0
+   - Data de devolução deve ser posterior à data de empréstimo
+   - Ao emprestar, estoque é decrementado
+   - Ao devolver, estoque é incrementado
+   - Status atrasado é definido automaticamente
 
-2. **Adicione seu código**: Os workflows detectam automaticamente a tecnologia e configuram tudo
-3. **Configure secrets** (opcional): Para deploy automático
-4. **Comece a desenvolver**: Os workflows funcionam imediatamente!
+## 🤝 Contribuindo
 
-> **Nota**: Arquivos de configuração específicos (como `k6-test.js`, `.pa11yci.json`, `sonar-project.properties`) não estão incluídos. Você pode criá-los conforme necessário para seu projeto específico.
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
 
-### ✨ Recursos Principais
+## 📄 Licença
 
-- 🔄 **CI/CD Automático**: Workflows prontos para build, teste e deploy
-- 🌐 **Multi-tecnologia**: Suporta Node.js, Python, .NET, Java, Go e mais
-- 🔒 **Segurança**: Scans automáticos de vulnerabilidades
-- 📦 **Gerenciamento de Dependências**: Atualização automática e verificação de segurança
-- 🤖 **Automação de PRs**: Labeling, validações e estatísticas automáticas
-- 📊 **Monitoramento**: Performance, acessibilidade e qualidade de código
-- 🚀 **Deploy Automático**: Integração com Vercel, Netlify, Heroku, AWS, Azure e mais
+Este projeto está sob a licença MIT.
 
----
-
-## CI/CD e Workflows
-
-Este projeto inclui workflows completos de GitHub Actions para automação de todo o ciclo de desenvolvimento.
-
-### 🚀 Workflows Disponíveis
-
-#### 1. **CI - Build & Test** (`ci.yml`)
-- ✅ Detecção automática de tecnologias
-- 🏗️ Build automático para backend e frontend
-- 🧪 Execução de testes
-- 📊 Análise de código (Linting)
-- 🔒 Scan de segurança com Trivy
-- 📈 Análise de qualidade com SonarCloud
-
-#### 2. **CD - Deploy** (`cd.yml`)
-- 🚀 Deploy automático para múltiplas plataformas
-- 🐳 Build e push de imagens Docker
-- 📝 Criação automática de releases
-- 🏷️ Geração de changelog
-
-#### 3. **Dependencies Check** (`dependencies.yml`)
-- 🔍 Verificação de vulnerabilidades
-- 📦 Detecção de pacotes desatualizados
-- 🔄 Atualização automática de dependências
-- ⚖️ Verificação de licenças
-
-#### 4. **PR Automation** (`pr-automation.yml`)
-- 🏷️ Labeling automático
-- 📏 Validação de título semântico
-- 📊 Estatísticas de mudanças
-- 🤖 Auto-merge de PRs do Dependabot
-
-#### 5. **Monitoring** (`monitoring.yml`)
-- 🔍 Lighthouse audit
-- ⚡ Testes de performance com k6
-- 🔒 Verificação de SSL
-- 📊 Análise de cobertura de código
-
-#### 6. **Auto Tag & Version** (`auto-tag.yml`) ⭐ NOVO
-- 🏷️ Criação automática de tags quando há merge para `main`
-- 📊 Versionamento semântico baseado em commits convencionais
-- 🔄 Detecta automaticamente o tipo de versão (major, minor, patch)
-- 🎯 Integrado com CD para releases automáticas
-
-### 📚 Documentação dos Workflows
-
-- 📖 [Guia Completo](.github/README.md) - Documentação detalhada de todos os workflows
-- 🚀 [Quick Start](.github/QUICKSTART.md) - Comece em 5 minutos
-- 🏷️ [Auto Versioning](.github/AUTO_VERSIONING.md) - Tags e releases automáticas ⭐ NOVO
-- 📦 [Release Guide](.github/RELEASE_GUIDE.md) - Como criar releases
-- 📛 [Badges](.github/BADGES.md) - Badges para seu README
-
-### 🔧 Tecnologias Suportadas
-
-| Categoria | Tecnologias |
-|-----------|-------------|
-| **Frontend** | Node.js, React, Vue, Angular, Svelte, Next.js, Nuxt.js |
-| **Backend** | Node.js, Python, .NET, Java, Go |
-| **Gerenciadores** | npm, yarn, pnpm, pip, Maven, Gradle, NuGet, Go modules |
-| **Containers** | Docker, Docker Compose |
-| **Deploy** | Vercel, Netlify, GitHub Pages, Heroku, AWS, Azure |
-
-### ⚡ Início Rápido
-
-1. **Clone o repositório**
-2. **Os workflows já estão configurados** em `.github/workflows/`
-3. **Faça seu primeiro push**:
-   ```bash
-   git add .
-   git commit -m "feat: initial commit"
-   git push origin main
-   ```
-4. **Veja os workflows em ação** na aba Actions do GitHub
-
-### 🎯 Fluxo Completo de Release Automática
-
-Este repositório possui um fluxo completo de automação:
-
-```
-1. Desenvolver → 2. PR → 3. Merge para main → 4. Auto Tag → 5. Auto Release
-```
-
-**Exemplo prático:**
-```bash
-# 1. Criar branch e desenvolver
-git checkout -b feature/nova-funcionalidade
-git commit -m "feat: adiciona funcionalidade incrível"
-
-# 2. Criar PR e fazer merge para main
-
-# 3. Automação acontece:
-#    ✅ Auto Tag detecta "feat:" e cria tag v1.1.0
-#    ✅ CD detecta tag e cria release automaticamente
-#    ✅ Changelog gerado com base nos commits
-```
-
-Para mais detalhes, consulte o [Auto Versioning Guide](.github/AUTO_VERSIONING.md).
-
----
-
-## Instalação
-
-Forneça instruções claras sobre como instalar o seu software.  
-Inclua pré-requisitos, como dependências de software ou bibliotecas necessárias.  
-
-Exemplo:
-
-```bash
-$ git clone https://github.com/seu-usuario/nome-do-projeto.git
-$ cd nome-do-projeto
-````
-
----
-
-## Como Usar
-
-Explique como usar o seu software em detalhes.
-Forneça exemplos de código, comandos de linha ou capturas de tela para demonstrar o uso típico do software.
-
-Exemplo:
-
-```bash
-# Exemplo de execução
-dotnet run
-```
-
-Isso iniciará o servidor de desenvolvimento.
-
----
-
-## Configuração
-
-Se o seu software requer configuração adicional além da instalação padrão, explique aqui como configurá-lo.
-Isso pode incluir variáveis de ambiente, arquivos de configuração ou qualquer ajuste necessário para personalizar o comportamento do software.
-
----
-
-## Contribuições
-
-Explique se você está aberto para contribuições e como outros desenvolvedores podem ajudar.
-Inclua orientações para quem deseja reportar bugs, enviar solicitações de novos recursos ou fazer alterações no código.
-
----
-
-## Artigos & Conteúdos
-
-* 💼 [LinkedIn](https://www.linkedin.com/in/daniloopinheiro)
-* ✍️ [Medium](https://medium.com/@daniloopinheiro)
-* 💻 [Dev.to](https://dev.to/daniloopinheiro)
-
----
-
-## Licença
-
-MIT License © 2025 [LICENSE.md](https://github.com/daniloopinheiro/dopBase/blob/main/LICENSE.md) — por [Danilo O. Pinheiro](https://www.linkedin.com/in/daniloopinheiro/)
-
----
-
-## Contato
-
-### 💬 Suporte Técnico
-Para questões técnicas, problemas ou sugestões:
-- **Issues**: [GitHub Issues](https://github.com/daniloopinheiro/dopNetHL7/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/daniloopinheiro/dopNetHL7/discussions)
-
-### 👨‍💻 Autor
-**Danilo O. Pinheiro**  
-Especialista em .NET, Clean Architecture e Interoperabilidade em Saúde
-
-- **Email Pessoal**: [daniloopro@gmail.com](mailto:daniloopro@gmail.com)
-- **Email Empresarial**: [devsfree@devsfree.com.br](mailto:devsfree@devsfree.com.br)
-- **Consultoria**: [contato@dopme.io](mailto:contato@dopme.io)
-- **LinkedIn**: [Danilo O. Pinheiro](https://www.linkedin.com/in/daniloopinheiro/)
-
-### 🏢 Empresas
-- **[DevsFree](https://devsfree.com.br)**: Desenvolvimento de Software
-- **[dopme.io](https://dopme.io)**: Consultoria e Soluções Tecnológicas
-
----
-
-<div align="center">
-
-**⭐ Se este projeto foi útil, deixe uma estrela no GitHub! ⭐**
-
-<p>
-Feito com ❤️ por <strong>Danilo O. Pinheiro</strong><br/>  
-<a href="https://devsfree.com.br" target="_blank">DevsFree</a> • <a href="https://dopme.io" target="_blank">dopme.io</a>  
-</p>
-
-</div>

@@ -1,0 +1,12 @@
+{
+  "idLivro": 1,
+  "nomeUsuario": "João Silva",
+  "cpfUsuario": "123.456.789-00",
+  "telefone": "(11) 98765-4321",
+  "email": "joao.silva@email.com",
+  "dataEmprestimo": "2025-11-04",
+  "dataPrevistaDevolucao": "2025-11-18",
+  "status": "emprestado",
+  "observacoes": "Primeiro empréstimo de teste"
+}
+

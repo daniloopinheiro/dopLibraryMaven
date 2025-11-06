@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    container_name: projectsacademy-db
+    restart: unless-stopped
+    environment:
+      POSTGRESQL_USERNAME: postgres
+      POSTGRESQL_PASSWORD: postgres
+      POSTGRESQL_DATABASE: postgres
+      ALLOW_EMPTY_PASSWORD: "no"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/bitnami/postgresql
+      - ./supabase-init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - projectsacademy-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  projectsacademy-network:
+    driver: bridge
+
