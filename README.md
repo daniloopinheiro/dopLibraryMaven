@@ -1,25 +1,74 @@
-# Biblioteca API - Sistema de Gerenciamento de Biblioteca
+# Biblioteca API
 
-API REST desenvolvida com Spring Boot para gerenciamento de biblioteca, incluindo controle de autores, livros e empréstimos.
+[![Java](https://img.shields.io/badge/Java-17-orange.svg)](https://www.oracle.com/java/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.0-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-12+-blue.svg)](https://www.postgresql.org/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## 🚀 Tecnologias
+**API REST completa** para gerenciamento de biblioteca com Spring Boot, incluindo controle de autores, livros e empréstimos.
+Suporte para múltiplos perfis de banco de dados (H2, PostgreSQL, Supabase) e deploy com Docker.
 
-- Java 17
-- Spring Boot 3.2.0
-- Spring Data JPA
-- PostgreSQL
-- Maven
-- Lombok
+## 📑 Índice
 
-## 📋 Pré-requisitos
+1. [Visão Geral](#visão-geral)
+2. [Tecnologias](#tecnologias)
+3. [Início Rápido](#início-rápido)
+4. [Perfis e Configuração](#perfis-e-configuração)
+5. [Endpoints da API](#endpoints-da-api)
+6. [Exemplos de Uso](#exemplos-de-uso)
+7. [Docker](#docker)
+8. [Estrutura do Projeto](#estrutura-do-projeto)
+9. [Regras de Negócio](#regras-de-negócio)
+10. [Contribuições](#contribuições)
+11. [Licença](#licença)
+12. [Contato](#contato)
 
-- JDK 17 ou superior
-- Maven 3.6+
-- PostgreSQL 12+
+---
 
-## ⚙️ Configuração e Execução
+## Visão Geral
 
-### 🚀 Início Rápido (Recomendado)
+A **Biblioteca API** é uma solução completa para gerenciamento de bibliotecas, oferecendo funcionalidades de cadastro e controle de autores, livros e empréstimos. Desenvolvida com Spring Boot e seguindo as melhores práticas de desenvolvimento, a API é escalável, segura e fácil de implantar.
+
+### ✨ Recursos Principais
+
+- 📚 **Gestão de Autores**: CRUD completo com busca por nome e nacionalidade
+- 📖 **Controle de Livros**: Gerenciamento de estoque, ISBN único e busca avançada
+- 🔄 **Empréstimos**: Sistema completo com controle de status e prazos
+- 🆕 **Batch Operations**: Criação em lote de autores
+- 🔒 **Segurança**: Validações robustas e prevenção de SQL Injection
+- 🎯 **Multi-ambiente**: Suporte para H2, PostgreSQL local e Supabase
+- 🐳 **Docker Ready**: Deploy facilitado com Docker Compose
+- 🌐 **Interface Web**: pgAdmin integrado para gerenciamento visual
+
+---
+
+## Tecnologias
+
+### 🚀 Stack Principal
+
+| Tecnologia | Versão | Descrição |
+|------------|--------|-----------|
+| **Java** | 17 | Linguagem base |
+| **Spring Boot** | 3.2.0 | Framework principal |
+| **Spring Data JPA** | - | Persistência de dados |
+| **PostgreSQL** | 12+ | Banco de dados principal |
+| **H2 Database** | - | Banco em memória (dev) |
+| **Maven** | 3.6+ | Gerenciamento de dependências |
+| **Lombok** | - | Redução de boilerplate |
+| **Docker** | - | Containerização |
+
+### 📋 Pré-requisitos
+
+- ☕ **JDK 17** ou superior
+- 📦 **Maven 3.6+**
+- 🐘 **PostgreSQL 12+** (opcional - pode usar H2)
+- 🐳 **Docker** (opcional - para ambiente containerizado)
+
+---
+
+## Início Rápido
+
+### ⚡ Modo Mais Rápido (H2 - Recomendado para Dev)
 
 A maneira mais fácil de começar é usar **H2 Database** (banco em memória):
 
@@ -31,93 +80,112 @@ A maneira mais fácil de começar é usar **H2 Database** (banco em memória):
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
-✅ **Pronto!** A aplicação estará rodando em segundos sem precisar instalar nada!
+✅ **Pronto em segundos!** Não precisa instalar nada.
 
 - **API REST**: http://localhost:8080/api/autores
 - **Console H2**: http://localhost:8080/api/h2-console
+  - JDBC URL: `jdbc:h2:mem:biblioteca`
+  - Username: `sa`
+  - Password: *(vazio)*
+
+### 🔧 Comandos Essenciais
+
+```powershell
+# Compilar projeto
+./mvnw.cmd clean install
+
+# Executar testes
+./mvnw.cmd test
+
+# Gerar JAR
+./mvnw.cmd clean package
+
+# Executar JAR
+java -jar target/biblioteca-api-1.0.0.jar
+```
 
 ---
 
+## Perfis e Configuração
+
 ### 📋 Perfis Disponíveis
 
-#### 1. DEV (H2 - Desenvolvimento) - **RECOMENDADO**
+#### 1️⃣ **DEV (H2)** - Desenvolvimento ⭐ RECOMENDADO
+
 ```powershell
 ./run-dev.bat
 ```
-- ✅ Sem instalação
-- ✅ Funciona offline
-- ⚠️ Dados são perdidos ao reiniciar
 
-#### 2. SUPABASE (PostgreSQL Cloud)
+**Características:**
+- ✅ Banco em memória (H2)
+- ✅ Funciona offline
+- ✅ Zero configuração
+- ✅ Console web incluído
+- ⚠️ Dados perdidos ao reiniciar
+
+**Ideal para:** Desenvolvimento local, testes rápidos
+
+---
+
+#### 2️⃣ **SUPABASE** - PostgreSQL na Nuvem ☁️
+
 ```powershell
 ./run-supabase.bat
 ```
-**ANTES da primeira execução**, execute no Supabase SQL Editor:
+
+**⚠️ IMPORTANTE:** Execute ANTES da primeira execução no Supabase SQL Editor:
+
 ```sql
 CREATE TYPE status_emprestimo AS ENUM ('EMPRESTADO', 'DEVOLVIDO', 'ATRASADO');
 ```
+
+**Características:**
 - ✅ PostgreSQL real
 - ✅ Dados persistem
+- ✅ Acesso remoto
 - ⚠️ Requer internet
+- ⚠️ Requer configuração de credenciais
 
-#### 3. Docker (PostgreSQL Local) - **NOVO! 🐳**
+**Ideal para:** Testes em produção, demos, acesso remoto
+
+**Configuração:**
+```properties
+# application-supabase.properties
+spring.datasource.url=jdbc:postgresql://[SEU-HOST].supabase.co:5432/postgres
+spring.datasource.username=postgres
+spring.datasource.password=[SUA-SENHA]
+```
+
+---
+
+#### 3️⃣ **DOCKER** - PostgreSQL + pgAdmin Local 🐳
+
 ```powershell
-# 1. Iniciar PostgreSQL + pgAdmin com Docker
+# 1. Iniciar PostgreSQL + pgAdmin
 docker-compose -f docker-compose-pgadmin.yml up -d
 
 # 2. Executar a aplicação
 ./mvnw.cmd spring-boot:run -D"spring-boot.run.profiles=dev"
 ```
+
+**Características:**
 - ✅ PostgreSQL real
 - ✅ Dados persistem
-- ✅ Fácil de configurar
-- ✅ Interface web (pgAdmin) em http://localhost:8082
+- ✅ Interface web (pgAdmin)
+- ✅ Fácil reset de dados
 - ⚠️ Requer Docker instalado
 
-📖 **Ver guia completo:** `QUICK-START.md` ou `WEB-INTERFACES.md`
+**Acessos:**
+- **pgAdmin**: http://localhost:8082
+  - Email: `admin@admin.com`
+  - Password: `admin`
+- **PostgreSQL**: `localhost:5432`
+  - Username: `postgres`
+  - Password: `postgres`
+  - Database: `biblioteca`
 
-#### 4. PostgreSQL Local (Instalação Manual)
+**Comandos Docker:**
 ```powershell
-./mvnw.cmd spring-boot:run
-```
-Requer configuração do PostgreSQL local.
-
-📖 **Ver guia completo:** `README_PROFILES.md`
-
----
-
-## 🏃 Comandos Úteis
-
-### Compilar
-```powershell
-./mvnw.cmd clean install
-```
-
-### Executar (H2)
-```powershell
-./run-dev.bat
-```
-
-### Executar (Supabase)
-```powershell
-./run-supabase.bat
-```
-
-### Gerar JAR
-```powershell
-./mvnw.cmd clean package
-java -jar target/biblioteca-api-1.0.0.jar
-```
-
-### Docker (PostgreSQL + pgAdmin)
-```powershell
-# Iniciar serviços (PostgreSQL + pgAdmin)
-docker-compose -f docker-compose-pgadmin.yml up -d
-
-# Acessar pgAdmin
-# URL: http://localhost:8082
-# Login: admin@admin.com / admin
-
 # Ver logs
 docker-compose -f docker-compose-pgadmin.yml logs -f
 
@@ -128,57 +196,102 @@ docker-compose -f docker-compose-pgadmin.yml down
 docker-compose -f docker-compose-pgadmin.yml down -v
 ```
 
-A aplicação estará disponível em: `http://localhost:8080/api`
+**Ideal para:** Desenvolvimento com persistência, testes de integração
 
-## 📚 Endpoints da API
+---
 
-### Autores
+#### 4️⃣ **PROD (PostgreSQL Local)** - Produção
 
-- `GET /api/autores` - Listar todos os autores
-- `GET /api/autores/{id}` - Buscar autor por ID
-- `GET /api/autores/search?name={nome}` - Buscar autores por nome
-- `GET /api/autores/nacionalidade/{nacionalidade}` - Buscar autores por nacionalidade
-- `POST /api/autores` - Criar novo autor
-- `POST /api/autores/batch` - 🆕 **Criar múltiplos autores (Batch)**
-- `PUT /api/autores/{id}` - Atualizar autor
-- `DELETE /api/autores/{id}` - Deletar autor
+```powershell
+./mvnw.cmd spring-boot:run
+```
 
-### Livros
+**Características:**
+- ✅ PostgreSQL instalado localmente
+- ✅ Dados persistem
+- ✅ Performance máxima
+- ⚠️ Requer instalação e configuração manual
 
-- `GET /api/livros` - Listar todos os livros
-- `GET /api/livros/{id}` - Buscar livro por ID
-- `GET /api/livros/search?titulo={titulo}` - Buscar livros por título
-- `GET /api/livros/isbn/{isbn}` - Buscar livro por ISBN
-- `GET /api/livros/autor/{idAutor}` - Listar livros por autor
-- `GET /api/livros/genero/{genero}` - Listar livros por gênero
-- `GET /api/livros/disponiveis` - Listar livros disponíveis
-- `POST /api/livros` - Criar novo livro
-- `PUT /api/livros/{id}` - Atualizar livro
-- `PATCH /api/livros/{id}/disponibilidade?disponivel={true|false}` - Atualizar disponibilidade
-- `DELETE /api/livros/{id}` - Deletar livro
+**Ideal para:** Produção, performance crítica
 
-### Empréstimos
+**Configuração:**
+```properties
+# application.properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/biblioteca
+spring.datasource.username=postgres
+spring.datasource.password=sua-senha
+```
 
-- `GET /api/emprestimos` - Listar todos os empréstimos
-- `GET /api/emprestimos/{id}` - Buscar empréstimo por ID
-- `GET /api/emprestimos/status/{status}` - Listar empréstimos por status
-- `GET /api/emprestimos/livro/{idLivro}` - Listar empréstimos por livro
-- `GET /api/emprestimos/cpf/{cpf}` - Listar empréstimos por CPF do usuário
-- `GET /api/emprestimos/search?nome={nome}` - Buscar empréstimos por nome do usuário
-- `GET /api/emprestimos/atrasados` - Listar empréstimos atrasados
-- `GET /api/emprestimos/periodo?dataInicio={data}&dataFim={data}` - Listar empréstimos por período
-- `POST /api/emprestimos` - Criar novo empréstimo
-- `PATCH /api/emprestimos/{id}/devolver` - Devolver livro
-- `PUT /api/emprestimos/{id}` - Atualizar empréstimo
-- `DELETE /api/emprestimos/{id}` - Deletar empréstimo
-- `POST /api/emprestimos/atualizar-atrasados` - Atualizar status dos empréstimos atrasados
+---
 
-## 📝 Exemplos de Requisições
+### 📖 Documentação Adicional
 
-### Criar Autor
+- 📘 **Guia Completo de Perfis**: `README_PROFILES.md`
+- 🚀 **Quick Start Guide**: `QUICK-START.md`
+- 🌐 **Interfaces Web**: `WEB-INTERFACES.md`
 
-```json
+---
+
+## Endpoints da API
+
+### 👤 Autores
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `GET` | `/api/autores` | Listar todos os autores |
+| `GET` | `/api/autores/{id}` | Buscar autor por ID |
+| `GET` | `/api/autores/search?name={nome}` | Buscar autores por nome |
+| `GET` | `/api/autores/nacionalidade/{nacionalidade}` | Buscar por nacionalidade |
+| `POST` | `/api/autores` | Criar novo autor |
+| `POST` | `/api/autores/batch` | 🆕 Criar múltiplos autores |
+| `PUT` | `/api/autores/{id}` | Atualizar autor |
+| `DELETE` | `/api/autores/{id}` | Deletar autor |
+
+### 📚 Livros
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `GET` | `/api/livros` | Listar todos os livros |
+| `GET` | `/api/livros/{id}` | Buscar livro por ID |
+| `GET` | `/api/livros/search?titulo={titulo}` | Buscar livros por título |
+| `GET` | `/api/livros/isbn/{isbn}` | Buscar livro por ISBN |
+| `GET` | `/api/livros/autor/{idAutor}` | Listar livros por autor |
+| `GET` | `/api/livros/genero/{genero}` | Listar livros por gênero |
+| `GET` | `/api/livros/disponiveis` | Listar livros disponíveis |
+| `POST` | `/api/livros` | Criar novo livro |
+| `PUT` | `/api/livros/{id}` | Atualizar livro |
+| `PATCH` | `/api/livros/{id}/disponibilidade` | Atualizar disponibilidade |
+| `DELETE` | `/api/livros/{id}` | Deletar livro |
+
+### 🔄 Empréstimos
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `GET` | `/api/emprestimos` | Listar todos os empréstimos |
+| `GET` | `/api/emprestimos/{id}` | Buscar empréstimo por ID |
+| `GET` | `/api/emprestimos/status/{status}` | Listar por status |
+| `GET` | `/api/emprestimos/livro/{idLivro}` | Listar por livro |
+| `GET` | `/api/emprestimos/cpf/{cpf}` | Listar por CPF do usuário |
+| `GET` | `/api/emprestimos/search?nome={nome}` | Buscar por nome |
+| `GET` | `/api/emprestimos/atrasados` | Listar empréstimos atrasados |
+| `GET` | `/api/emprestimos/periodo` | Listar por período |
+| `POST` | `/api/emprestimos` | Criar novo empréstimo |
+| `PATCH` | `/api/emprestimos/{id}/devolver` | Devolver livro |
+| `PUT` | `/api/emprestimos/{id}` | Atualizar empréstimo |
+| `DELETE` | `/api/emprestimos/{id}` | Deletar empréstimo |
+| `POST` | `/api/emprestimos/atualizar-atrasados` | Atualizar status atrasados |
+
+---
+
+## Exemplos de Uso
+
+### 📝 Criar Autor
+
+**Request:**
+```http
 POST /api/autores
+Content-Type: application/json
+
 {
   "nome": "Machado",
   "sobrenome": "de Assis",
@@ -188,10 +301,27 @@ POST /api/autores
 }
 ```
 
+**Response:**
+```json
+{
+  "id": 1,
+  "nome": "Machado",
+  "sobrenome": "de Assis",
+  "nacionalidade": "Brasileiro",
+  "dataNascimento": "1839-06-21",
+  "biografia": "Joaquim Maria Machado de Assis foi um escritor brasileiro..."
+}
+```
+
+---
+
 ### 🆕 Criar Múltiplos Autores (Batch)
 
-```json
+**Request:**
+```http
 POST /api/autores/batch
+Content-Type: application/json
+
 [
   {
     "nome": "Clarice",
@@ -210,10 +340,23 @@ POST /api/autores/batch
 ]
 ```
 
-**Resposta:**
+**Response:**
 ```json
 {
-  "autores": [...],
+  "autores": [
+    {
+      "id": 2,
+      "nome": "Clarice",
+      "sobrenome": "Lispector",
+      ...
+    },
+    {
+      "id": 3,
+      "nome": "Jorge",
+      "sobrenome": "Amado",
+      ...
+    }
+  ],
   "totalProcessado": 2,
   "criados": 2,
   "existentes": 0,
@@ -221,14 +364,22 @@ POST /api/autores/batch
 }
 ```
 
-**✨ Ignora duplicatas automaticamente!** Se um autor já existir, ele será retornado sem erro.
+**✨ Recursos:**
+- Ignora duplicatas automaticamente
+- Retorna autores existentes sem erro
+- Processa em lote para melhor performance
 
-**💡 Testar:** `.\test-batch-create.ps1`
+**💡 Testar:** Execute o script `.\test-batch-create.ps1`
 
-### Criar Livro
+---
 
-```json
+### 📖 Criar Livro
+
+**Request:**
+```http
 POST /api/livros
+Content-Type: application/json
+
 {
   "titulo": "Dom Casmurro",
   "idAutor": 1,
@@ -242,10 +393,15 @@ POST /api/livros
 }
 ```
 
-### Criar Empréstimo
+---
 
-```json
+### 🔄 Criar Empréstimo
+
+**Request:**
+```http
 POST /api/emprestimos
+Content-Type: application/json
+
 {
   "idLivro": 1,
   "nomeUsuario": "João Silva",
@@ -258,57 +414,256 @@ POST /api/emprestimos
 }
 ```
 
-## 🔒 Funcionalidades de Segurança
+**Response:**
+```json
+{
+  "id": 1,
+  "livro": {
+    "id": 1,
+    "titulo": "Dom Casmurro"
+  },
+  "nomeUsuario": "João Silva",
+  "cpfUsuario": "123.456.789-00",
+  "status": "EMPRESTADO",
+  "dataEmprestimo": "2025-11-03",
+  "dataPrevistaDevolucao": "2025-11-17"
+}
+```
 
-- Validação de entrada em todos os endpoints
-- Tratamento global de exceções
-- Prevenção de SQL Injection através de JPA/Hibernate
-- Validação de regras de negócio (ex: livro disponível antes de emprestar)
+---
 
-## 📦 Estrutura do Projeto
+## Docker
+
+### 🐳 Configuração Completa com Docker Compose
+
+O projeto inclui configuração Docker com PostgreSQL e pgAdmin:
+
+**Arquivo:** `docker-compose-pgadmin.yml`
+
+```yaml
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: biblioteca-postgres
+    environment:
+      POSTGRES_DB: biblioteca
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: biblioteca-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8082:80"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+```
+
+### 🚀 Comandos Docker
+
+```powershell
+# Iniciar serviços
+docker-compose -f docker-compose-pgadmin.yml up -d
+
+# Ver status
+docker-compose -f docker-compose-pgadmin.yml ps
+
+# Ver logs
+docker-compose -f docker-compose-pgadmin.yml logs -f
+
+# Parar serviços
+docker-compose -f docker-compose-pgadmin.yml down
+
+# Remover dados e volumes
+docker-compose -f docker-compose-pgadmin.yml down -v
+```
+
+### 🌐 Acessos
+
+- **API**: http://localhost:8080/api
+- **pgAdmin**: http://localhost:8082
+  - Email: `admin@admin.com`
+  - Password: `admin`
+- **PostgreSQL**: `localhost:5432`
+
+---
+
+## Estrutura do Projeto
 
 ```
 backend/
 ├── src/
 │   ├── main/
 │   │   ├── java/com/biblioteca/
-│   │   │   ├── controller/      # Controladores REST
-│   │   │   ├── dto/              # Data Transfer Objects
-│   │   │   ├── exception/        # Tratamento de exceções
-│   │   │   ├── model/            # Entidades JPA
-│   │   │   │   └── enums/        # Enumerações
-│   │   │   ├── repository/       # Repositórios JPA
-│   │   │   ├── service/          # Lógica de negócio
+│   │   │   ├── controller/          # 🎮 Controladores REST
+│   │   │   ├── dto/                 # 📦 Data Transfer Objects
+│   │   │   ├── exception/           # ⚠️ Tratamento de exceções
+│   │   │   ├── model/               # 🗄️ Entidades JPA
+│   │   │   │   └── enums/           # 📋 Enumerações
+│   │   │   ├── repository/          # 🔍 Repositórios JPA
+│   │   │   ├── service/             # ⚙️ Lógica de negócio
 │   │   │   └── BibliotecaApplication.java
 │   │   └── resources/
-│   │       └── application.properties
-│   └── test/
-├── pom.xml
-└── README.md
+│   │       ├── application.properties           # 🔧 Config PROD
+│   │       ├── application-dev.properties       # 🔧 Config DEV (H2)
+│   │       └── application-supabase.properties  # 🔧 Config Supabase
+│   └── test/                        # 🧪 Testes
+├── scripts/                         # 📜 Scripts úteis
+│   ├── run-dev.bat
+│   ├── run-supabase.bat
+│   └── test-batch-create.ps1
+├── docker-compose-pgadmin.yml       # 🐳 Docker config
+├── pom.xml                          # 📦 Maven config
+└── README.md                        # 📖 Este arquivo
 ```
 
-## 🎯 Regras de Negócio
+---
 
-1. **Livros**: 
-   - ISBN deve ser único
-   - Livro só fica indisponível quando estoque chega a zero
-   
-2. **Empréstimos**:
-   - Livro deve estar disponível e com estoque > 0
-   - Data de devolução deve ser posterior à data de empréstimo
-   - Ao emprestar, estoque é decrementado
-   - Ao devolver, estoque é incrementado
-   - Status atrasado é definido automaticamente
+## Regras de Negócio
 
-## 🤝 Contribuindo
+### 📚 Livros
 
-1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
+- ✅ **ISBN único**: Cada livro deve ter um ISBN único no sistema
+- ✅ **Controle de estoque**: Livro só fica indisponível quando estoque = 0
+- ✅ **Validações**: Título, autor e ISBN são obrigatórios
+- ✅ **Relacionamento**: Todo livro deve estar vinculado a um autor existente
 
-## 📄 Licença
+### 🔄 Empréstimos
 
-Este projeto está sob a licença MIT.
+- ✅ **Disponibilidade**: Livro deve estar disponível (estoque > 0)
+- ✅ **Datas**: Data de devolução deve ser posterior à data de empréstimo
+- ✅ **Estoque automático**:
+  - Ao emprestar: estoque é decrementado
+  - Ao devolver: estoque é incrementado
+- ✅ **Status automático**:
+  - `EMPRESTADO`: Quando criado
+  - `DEVOLVIDO`: Quando devolvido
+  - `ATRASADO`: Quando passa da data prevista
+- ✅ **Validações**: CPF, email e telefone são validados
 
+### 👤 Autores
+
+- ✅ **Dados completos**: Nome, sobrenome e nacionalidade obrigatórios
+- ✅ **Batch creation**: Suporte para criação em lote
+- ✅ **Duplicatas**: Sistema ignora autores duplicados em batch
+- ✅ **Busca flexível**: Busca por nome parcial e nacionalidade
+
+---
+
+## 🔒 Segurança
+
+### Funcionalidades Implementadas
+
+- ✅ **Validação de entrada**: Todos os endpoints validam dados de entrada
+- ✅ **Tratamento global de exceções**: Respostas consistentes de erro
+- ✅ **SQL Injection**: Prevenção automática via JPA/Hibernate
+- ✅ **Regras de negócio**: Validações no service layer
+- ✅ **CORS**: Configurado para desenvolvimento (ajustar para produção)
+
+### Recomendações para Produção
+
+- 🔐 Implementar autenticação (JWT/OAuth2)
+- 🔐 Adicionar autorização baseada em roles
+- 🔐 Configurar HTTPS
+- 🔐 Implementar rate limiting
+- 🔐 Adicionar logging de auditoria
+
+---
+
+## Contribuições
+
+Contribuições são bem-vindas! Para contribuir:
+
+1. **Fork** o projeto
+2. **Crie uma branch** para sua feature
+   ```bash
+   git checkout -b feature/MinhaFeature
+   ```
+3. **Commit** suas mudanças
+   ```bash
+   git commit -m 'feat: Adiciona nova funcionalidade'
+   ```
+4. **Push** para a branch
+   ```bash
+   git push origin feature/MinhaFeature
+   ```
+5. Abra um **Pull Request**
+
+### 📝 Convenções de Commit
+
+Use [Conventional Commits](https://www.conventionalcommits.org/):
+
+- `feat:` Nova funcionalidade
+- `fix:` Correção de bug
+- `docs:` Documentação
+- `refactor:` Refatoração de código
+- `test:` Testes
+- `chore:` Tarefas de manutenção
+
+---
+
+## Configuração
+
+Se o seu software requer configuração adicional além da instalação padrão, explique aqui como configurá-lo.
+Isso pode incluir variáveis de ambiente, arquivos de configuração ou qualquer ajuste necessário para personalizar o comportamento do software.
+
+---
+
+## Contribuições
+
+Explique se você está aberto para contribuições e como outros desenvolvedores podem ajudar.
+Inclua orientações para quem deseja reportar bugs, enviar solicitações de novos recursos ou fazer alterações no código.
+
+---
+
+## Artigos & Conteúdos
+
+* 💼 [LinkedIn](https://www.linkedin.com/in/daniloopinheiro)
+* ✍️ [Medium](https://medium.com/@daniloopinheiro)
+* 💻 [Dev.to](https://dev.to/daniloopinheiro)
+
+---
+
+## Licença
+
+MIT License © 2025 [LICENSE.md](https://github.com/daniloopinheiro/dopBase/blob/main/LICENSE.md) — por [Danilo O. Pinheiro](https://www.linkedin.com/in/daniloopinheiro/)
+
+---
+
+## Contato
+
+### 💬 Suporte Técnico
+Para questões técnicas, problemas ou sugestões:
+- **Issues**: [GitHub Issues](https://github.com/daniloopinheiro/dopNetHL7/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/daniloopinheiro/dopNetHL7/discussions)
+
+### 👨‍💻 Autor
+**Danilo O. Pinheiro**
+Especialista em .NET, Clean Architecture e Interoperabilidade em Saúde
+
+- **Email Pessoal**: [daniloopro@gmail.com](mailto:daniloopro@gmail.com)
+- **Email Empresarial**: [devsfree@devsfree.com.br](mailto:devsfree@devsfree.com.br)
+- **Consultoria**: [contato@dopme.io](mailto:contato@dopme.io)
+- **LinkedIn**: [Danilo O. Pinheiro](https://www.linkedin.com/in/daniloopinheiro/)
+
+### 🏢 Empresas
+- **[DevsFree](https://devsfree.com.br)**: Desenvolvimento de Software
+- **[dopme.io](https://dopme.io)**: Consultoria e Soluções Tecnológicas
+
+---
+
+<div align="center">
+
+**⭐ Se este projeto foi útil, deixe uma estrela no GitHub! ⭐**
