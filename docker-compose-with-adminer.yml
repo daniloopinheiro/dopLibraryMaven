@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: bitnami/postgresql:15
+    container_name: projectsacademy-db
+    restart: unless-stopped
+    environment:
+      POSTGRESQL_USERNAME: postgres
+      POSTGRESQL_PASSWORD: postgres
+      POSTGRESQL_DATABASE: postgres
+      ALLOW_EMPTY_PASSWORD: "no"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/bitnami/postgresql
+      - ./supabase-init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - projectsacademy-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Interface web para gerenciar o banco de dados
+  adminer:
+    image: adminer:latest
+    container_name: projectsacademy-adminer
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    networks:
+      - projectsacademy-network
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  projectsacademy-network:
+    driver: bridge
+

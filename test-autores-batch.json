@@ -1,0 +1,24 @@
+[
+    {
+        "nome": "Clarice",
+        "sobrenome": "Lispector",
+        "nacionalidade": "Brasileira",
+        "dataNascimento": "1920-12-10",
+        "biografia": "Clarice Lispector foi uma escritora e jornalista nascida na Ucrânia e naturalizada brasileira. É considerada uma das escritoras brasileiras mais importantes do século XX. Sua obra é marcada por um estilo introspectivo e inovador. Principais obras: A Hora da Estrela, A Paixão Segundo G.H., Laços de Família."
+    },
+    {
+        "nome": "Jorge",
+        "sobrenome": "Amado",
+        "nacionalidade": "Brasileiro",
+        "dataNascimento": "1912-08-10",
+        "biografia": "Jorge Leal Amado de Faria foi um dos mais famosos e traduzidos escritores brasileiros. Suas obras retratam a cultura baiana, o sincretismo religioso e a vida do povo. Escreveu romances que se tornaram clássicos como Gabriela, Cravo e Canela, Capitães da Areia, Dona Flor e Seus Dois Maridos."
+    },
+    {
+        "nome": "Machado",
+        "sobrenome": "de Assis",
+        "nacionalidade": "Brasileiro",
+        "dataNascimento": "1839-06-21",
+        "biografia": "Joaquim Maria Machado de Assis foi um escritor brasileiro, considerado por muitos críticos o maior nome da literatura brasileira. Foi fundador da Academia Brasileira de Letras. Principais obras: Dom Casmurro, Memórias Póstumas de Brás Cubas, Quincas Borba."
+    }
+]
+
