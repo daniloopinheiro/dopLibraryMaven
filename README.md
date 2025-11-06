@@ -15,14 +15,15 @@ Suporte para múltiplos perfis de banco de dados (H2, PostgreSQL, Supabase) e de
 3. [Início Rápido](#início-rápido)
 4. [Perfis e Configuração](#perfis-e-configuração)
 5. [Endpoints da API](#endpoints-da-api)
-6. [Exemplos de Uso](#exemplos-de-uso)
-7. [Docker](#docker)
-8. [Deploy (Render)](#deploy-render)
-9. [Estrutura do Projeto](#estrutura-do-projeto)
-10. [Regras de Negócio](#regras-de-negócio)
-11. [Contribuições](#contribuições)
-12. [Licença](#licença)
-13. [Contato](#contato)
+6. [Swagger/OpenAPI](#swaggeropenapi)
+7. [Exemplos de Uso](#exemplos-de-uso)
+8. [Docker](#docker)
+9. [Deploy (Render)](#deploy-render)
+10. [Estrutura do Projeto](#estrutura-do-projeto)
+11. [Regras de Negócio](#regras-de-negócio)
+12. [Contribuições](#contribuições)
+13. [Licença](#licença)
+14. [Contato](#contato)
 
 ---
 
@@ -40,6 +41,7 @@ A **Biblioteca API** é uma solução completa para gerenciamento de bibliotecas
 - 🎯 **Multi-ambiente**: Suporte para H2, PostgreSQL local e Supabase
 - 🐳 **Docker Ready**: Deploy facilitado com Docker Compose
 - 🌐 **Interface Web**: pgAdmin integrado para gerenciamento visual
+- 📘 **Swagger/OpenAPI**: Documentação interativa completa da API
 
 ---
 
@@ -281,6 +283,75 @@ spring.datasource.password=sua-senha
 | `PUT` | `/api/emprestimos/{id}` | Atualizar empréstimo |
 | `DELETE` | `/api/emprestimos/{id}` | Deletar empréstimo |
 | `POST` | `/api/emprestimos/atualizar-atrasados` | Atualizar status atrasados |
+
+---
+
+## Swagger/OpenAPI
+
+### 📘 Documentação Interativa da API
+
+A API inclui documentação completa e interativa via Swagger UI.
+
+#### 🌐 Acessar Swagger UI
+
+```bash
+# Local
+http://localhost:8080/api/swagger-ui.html
+
+# Docker
+http://localhost:8080/api/swagger-ui.html
+
+# Render (Produção)
+https://sua-app.onrender.com/api/swagger-ui.html
+```
+
+#### ✨ Recursos do Swagger
+
+- 📖 **28 endpoints documentados**
+  - 8 endpoints de Autores
+  - 10 endpoints de Livros
+  - 10 endpoints de Empréstimos
+
+- 🧪 **Interface Interativa**
+  - Testar endpoints diretamente no navegador
+  - Try it out habilitado
+  - Exemplos de requisições
+  - Validação de dados
+
+- 📝 **Documentação Completa**
+  - Descrições detalhadas
+  - Parâmetros documentados
+  - Respostas HTTP (200, 201, 400, 404, 500)
+  - Schemas de dados (DTOs)
+
+- 🎯 **Organização**
+  - Agrupamento por tags
+  - Ordenação alfabética
+  - Filtros de busca
+  - Syntax highlighting
+
+#### 📚 Documentação Completa
+
+Para guia detalhado de uso do Swagger, consulte:
+- **[SWAGGER.md](SWAGGER.md)** - Guia completo
+  - Como usar
+  - Exemplos práticos
+  - Personalização
+  - Troubleshooting
+
+#### 🚀 Quick Start
+
+1. **Iniciar aplicação**:
+   ```bash
+   ./mvnw spring-boot:run
+   ```
+
+2. **Abrir Swagger UI**:
+   ```
+   http://localhost:8080/api/swagger-ui.html
+   ```
+
+3. **Explorar e testar** endpoints interativamente!
 
 ---
 

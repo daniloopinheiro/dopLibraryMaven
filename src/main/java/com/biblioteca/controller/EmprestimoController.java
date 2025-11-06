@@ -3,6 +3,13 @@ package com.biblioteca.controller;
 import com.biblioteca.dto.EmprestimoDTO;
 import com.biblioteca.model.enums.StatusEmprestimo;
 import com.biblioteca.service.EmprestimoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/emprestimos")
 @CrossOrigin(origins = "*")
+@Tag(name = "Empréstimos", description = "API para gerenciamento de empréstimos de livros")
 public class EmprestimoController {
 
     @Autowired

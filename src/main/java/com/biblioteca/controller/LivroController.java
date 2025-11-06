@@ -2,6 +2,13 @@ package com.biblioteca.controller;
 
 import com.biblioteca.dto.LivroDTO;
 import com.biblioteca.service.LivroService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/livros")
 @CrossOrigin(origins = "*")
+@Tag(name = "Livros", description = "API para gerenciamento de livros")
 public class LivroController {
 
     @Autowired
