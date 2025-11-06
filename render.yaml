@@ -1,0 +1,72 @@
+# ================================
+# Render.com Configuration
+# Biblioteca API
+# ================================
+
+services:
+  # Web Service (API)
+  - type: web
+    name: biblioteca-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile.render
+    region: oregon # ou sua região preferida: oregon, frankfurt, singapore
+    plan: free # ou starter, standard, pro
+    
+    # Branch configuration
+    branch: main
+    
+    # Build configuration
+    buildFilter:
+      paths:
+        - src/**
+        - pom.xml
+        - Dockerfile.render
+    
+    # Environment variables
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      
+      - key: JAVA_OPTS
+        value: "-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
+      
+      # Database URL will be auto-populated if you add a PostgreSQL database
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: biblioteca-db
+          property: connectionString
+      
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: biblioteca-db
+          property: user
+      
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: biblioteca-db
+          property: password
+      
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      
+      - key: SPRING_JPA_SHOW_SQL
+        value: "false"
+      
+      # Server configuration
+      - key: SERVER_PORT
+        value: "8080"
+    
+    # Health check
+    healthCheckPath: /api/autores
+    
+    # Auto-deploy
+    autoDeploy: true
+
+# Database
+databases:
+  - name: biblioteca-db
+    databaseName: biblioteca
+    plan: free # ou starter, standard, pro
+    region: oregon
+    ipAllowList: [] # empty = allow all
+

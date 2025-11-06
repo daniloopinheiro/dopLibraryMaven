@@ -17,11 +17,12 @@ Suporte para múltiplos perfis de banco de dados (H2, PostgreSQL, Supabase) e de
 5. [Endpoints da API](#endpoints-da-api)
 6. [Exemplos de Uso](#exemplos-de-uso)
 7. [Docker](#docker)
-8. [Estrutura do Projeto](#estrutura-do-projeto)
-9. [Regras de Negócio](#regras-de-negócio)
-10. [Contribuições](#contribuições)
-11. [Licença](#licença)
-12. [Contato](#contato)
+8. [Deploy (Render)](#deploy-render)
+9. [Estrutura do Projeto](#estrutura-do-projeto)
+10. [Regras de Negócio](#regras-de-negócio)
+11. [Contribuições](#contribuições)
+12. [Licença](#licença)
+13. [Contato](#contato)
 
 ---
 
@@ -497,6 +498,64 @@ docker-compose -f docker-compose-pgadmin.yml down -v
   - Email: `admin@admin.com`
   - Password: `admin`
 - **PostgreSQL**: `localhost:5432`
+
+---
+
+## Deploy (Render)
+
+### 🚀 Deploy Rápido no Render.com
+
+A aplicação está pronta para deploy no [Render.com](https://render.com) com configuração otimizada.
+
+#### Passo a Passo
+
+1. **Fork/Clone** este repositório
+2. **Criar conta** no [Render](https://render.com)
+3. **New Web Service** > Conectar repositório
+4. **Configurar**:
+   - **Dockerfile Path**: `Dockerfile.render` ⚠️ IMPORTANTE
+   - **Environment Variables**:
+     ```
+     SPRING_PROFILES_ACTIVE=dev
+     ```
+
+5. **Deploy!** 🚀
+
+#### Arquivos para Deploy
+
+| Arquivo | Descrição |
+|---------|-----------|
+| `Dockerfile.render` | Dockerfile otimizado para Render |
+| `render.yaml` | Configuração Blueprint (opcional) |
+| `RENDER-DEPLOY.md` | Guia completo de deploy |
+
+#### Documentação Completa
+
+- 📘 **[RENDER-DEPLOY.md](RENDER-DEPLOY.md)** - Guia completo com:
+  - Solução para erro 502 (Maven Central)
+  - Deploy passo a passo
+  - Configuração de variáveis
+  - Troubleshooting detalhado
+  - Integração com PostgreSQL
+  - Monitoramento e logs
+
+#### Testar Localmente Antes
+
+```bash
+# Windows
+.\test-render-dockerfile.bat
+
+# Linux/Mac ou PowerShell
+.\test-render-dockerfile.ps1
+```
+
+Se funcionar localmente, funcionará no Render! ✅
+
+#### Quick Links
+
+- 🌐 **Deploy**: [render.com](https://render.com)
+- 📚 **Docs**: [RENDER-DEPLOY.md](RENDER-DEPLOY.md)
+- 🐳 **Docker**: [DOCKER.md](DOCKER.md)
 
 ---
 
