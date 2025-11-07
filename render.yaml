@@ -6,7 +6,7 @@
 services:
   # Web Service (API)
   - type: web
-    name: biblioteca-api
+    name: doplibrarymaven
     runtime: docker
     dockerfilePath: ./Dockerfile.render
     region: oregon # ou sua região preferida: oregon, frankfurt, singapore

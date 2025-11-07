@@ -67,7 +67,7 @@ public class OpenApiConfig {
                                 .url("http://localhost:8080/api")
                                 .description("Servidor Local"),
                         new Server()
-                                .url("https://biblioteca-api.onrender.com/api")
+                                .url("https://doplibrarymaven.onrender.com/api")
                                 .description("Servidor de Produção (Render)")
                 ))
                 .tags(List.of(
