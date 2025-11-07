@@ -478,22 +478,68 @@ O `OpenApiConfig.java` foi atualizado para incluir `/api` nas URLs dos servidore
 
 ---
 
-### "Try it out" não funciona
+### "Try it out" não funciona (CORS Error)
 
-**Problema**: Botão "Execute" não envia requisição
+**Problema**: Botão "Execute" retorna "Failed to fetch" ou erro CORS
+
+```
+Failed to fetch.
+Possible Reasons: CORS
+```
+
+**Solução**: ✅ **JÁ CORRIGIDO**
+
+A classe `CorsConfig.java` foi criada para configurar CORS globalmente:
+
+```java
+@Configuration
+public class CorsConfig {
+    @Bean
+    public CorsFilter corsFilter() {
+        // Permite todas as origens, métodos e headers
+    }
+}
+```
+
+**Se ainda aparecer erro:**
+
+1. **Recompilar aplicação:**
+   ```bash
+   ./mvnw clean package
+   ./mvnw spring-boot:run
+   ```
+
+2. **Limpar cache do navegador:**
+   - Ctrl+Shift+Delete
+   - Limpar cache
+   - Recarregar (Ctrl+F5)
+
+3. **Verificar headers CORS:**
+   - F12 → Network
+   - Selecionar requisição
+   - Ver "Response Headers"
+   - Procurar: `Access-Control-Allow-Origin: *`
+
+4. **Verificar console do navegador** (F12) para erros
+
+📚 **Ver detalhes completos:** [CORS-FIX.md](CORS-FIX.md)
+
+---
+
+### "Try it out" - Outros problemas
+
+**Problema**: Botão "Execute" não funciona por outras razões
 
 **Soluções**:
 
-1. **Verifique CORS** no controller:
-   ```java
-   @CrossOrigin(origins = "*")  // ← Necessário para desenvolvimento
+1. **Verifique firewall/antivírus**
+
+2. **Tente em navegador anônimo**
+
+3. **Verifique se aplicação está rodando:**
+   ```bash
+   curl http://localhost:8080/api/autores
    ```
-
-2. **Verifique firewall/antivírus**
-
-3. **Tente em navegador anônimo**
-
-4. **Verifique console** do navegador (F12) para erros
 
 ---
 
