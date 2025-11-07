@@ -64,10 +64,10 @@ public class OpenApiConfig {
                                 .url("https://github.com/daniloopinheiro/dopLibraryMaven/blob/main/LICENSE.md")))
                 .servers(List.of(
                         new Server()
-                                .url("http://localhost:8080")
+                                .url("http://localhost:8080/api")
                                 .description("Servidor Local"),
                         new Server()
-                                .url("https://biblioteca-api.onrender.com")
+                                .url("https://biblioteca-api.onrender.com/api")
                                 .description("Servidor de Produção (Render)")
                 ))
                 .tags(List.of(

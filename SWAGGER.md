@@ -397,6 +397,30 @@ public OpenAPI customOpenAPI() {
 
 ## Troubleshooting
 
+### Swagger UI mostra URLs incorretas (sem /api)
+
+**Problema**: Request URL mostra `http://localhost:8080/autores` em vez de `http://localhost:8080/api/autores`
+
+**Solução**: ✅ **JÁ CORRIGIDO**
+
+O `OpenApiConfig.java` foi atualizado para incluir `/api` nas URLs dos servidores:
+
+```java
+.servers(List.of(
+    new Server().url("http://localhost:8080/api")  // ← /api incluído
+))
+```
+
+**Se ainda aparecer errado:**
+1. Limpar cache: `./mvnw clean`
+2. Recompilar: `./mvnw compile`
+3. Reiniciar aplicação
+4. Limpar cache do navegador (Ctrl+F5)
+
+📚 **Ver detalhes:** [SWAGGER-CONTEXT-PATH-FIX.md](SWAGGER-CONTEXT-PATH-FIX.md)
+
+---
+
 ### Swagger UI não carrega
 
 **Problema**: Página em branco ou 404
