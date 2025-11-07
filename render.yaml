@@ -30,9 +30,9 @@ services:
       - key: JAVA_OPTS
         value: "-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
       
-      # Database Configuration - Render PostgreSQL
+      # Database Configuration - Render PostgreSQL (External Host)
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://dpg-d46j4c0dl3ps73bo34t0-a:5432/doplibrarymaven
+        value: jdbc:postgresql://dpg-d46j4c0dl3ps73bo34t0-a.oregon-postgres.render.com:5432/doplibrarymaven
       
       - key: SPRING_DATASOURCE_USERNAME
         value: admin
