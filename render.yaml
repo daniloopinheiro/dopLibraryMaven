@@ -30,21 +30,15 @@ services:
       - key: JAVA_OPTS
         value: "-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
       
-      # Database URL will be auto-populated if you add a PostgreSQL database
+      # Database Configuration - Render PostgreSQL
       - key: SPRING_DATASOURCE_URL
-        fromDatabase:
-          name: biblioteca-db
-          property: connectionString
+        value: jdbc:postgresql://dpg-d46j4c0dl3ps73bo34t0-a:5432/doplibrarymaven
       
       - key: SPRING_DATASOURCE_USERNAME
-        fromDatabase:
-          name: biblioteca-db
-          property: user
+        value: admin
       
       - key: SPRING_DATASOURCE_PASSWORD
-        fromDatabase:
-          name: biblioteca-db
-          property: password
+        value: VRE9dZvXjas0sq31sCgdXTMJ3Yldyk1c
       
       - key: SPRING_JPA_HIBERNATE_DDL_AUTO
         value: update
@@ -62,11 +56,8 @@ services:
     # Auto-deploy
     autoDeploy: true
 
-# Database
-databases:
-  - name: biblioteca-db
-    databaseName: biblioteca
-    plan: free # ou starter, standard, pro
-    region: oregon
-    ipAllowList: [] # empty = allow all
+# Database (Already created in Render)
+# Using existing database: dpg-d46j4c0dl3ps73bo34t0-a
+# Database: doplibrarymaven
+# Username: admin
 
